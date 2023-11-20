@@ -88,21 +88,94 @@ for link in html_links:
             table = driver.find_element(By.XPATH, '//*[@id="popup-modal"]/table')
             # Lấy tất cả các hàng (tr) trong bảng
             rows = table.find_elements(By.TAG_NAME, "tr")
-            parameter = []
-            for row in rows:
-            # Lấy tất cả các ô dữ liệu (td) trong hàng
-                cells = row.find_elements(By.TAG_NAME, "td")
+            monitor_technique = ''
+            monitor_size = ''
+            monitor_resolution = ''
+            back_camera = ''
+            back_video = ''
+            front_camera = ''
+            front_video = ''
+            gpu = ''
+            cpu = ''
+            ram = ''
+            rom = ''
+            battery = ''
+            charging_port = ''
+            os = ''
+            chipset = ''
 
-
-            # Trích xuất và in dữ liệu của hai ô dữ liệu
-                if len(cells) > 1:
-                    parameter.append(cells[0].text + ": " + cells[1].text)
-            
+            for tr in rows:
+                try:
+                    th = tr.find_elements(By.TAG_NAME, 'td')[0].text
+                    td = tr.find_elements(By.TAG_NAME, 'td')[1].text
+                    if th == 'Công nghệ màn hình':
+                        monitor_technique = td
+                    if th == 'Kích thước màn hình':
+                        monitor_size = td
+                    # if th == 'Độ phân giải':
+                    #     monitor_resolution = td
+                    if th == 'Độ phân giải':
+                        resolutions = td.split(', ')
+                        if len(resolutions) == 1:
+                            monitor_resolution = resolutions[0]
+                        elif len(resolutions) == 2:
+                            monitor_resolution = resolutions[0]
+                            back_camera = resolutions[1]
+                        elif len(resolutions) == 3:
+                            monitor_resolution = resolutions[0]
+                            back_camera = resolutions[1]
+                            front_camera = resolutions[2]
+                    # if th =='Độ phân giải camera sau':
+                    #     back_camera=td
+                    if th =='Quay phim':
+                        video = td.split(', ')
+                        if len(video) == 1 :
+                            back_video = video[0]
+                        if len(video) == 2:
+                            front_video == video[1]
+                            back_video = video[0]
+                    # if th == 'Độ phân giải camera trước':
+                    #     front_camera = td
+                    # if th == 'Tính năng camera':
+                    #     front_video = td
+                    if th == 'Vi xử lý đồ họa (GPU)':
+                        gpu = td
+                    if th == 'Tốc độ CPU':
+                        cpu = td
+                    if th == 'RAM':
+                        ram = td
+                    if th == 'Bộ nhớ trong':
+                        rom = td
+                    if th == 'Dung lượng pin':
+                        battery = td
+                    if th == 'Hỗ trợ sạc tối đa:':
+                        charging_port = td
+                    if th == 'Hệ điều hành':
+                        os = td
+                    if th == 'Vi xử lý':
+                        chipset = td
+                except:
+                    x=0
+              
             data = {
-                "Tên": name,
+                "name":name,
                 "brand": brand,
-                "price": price, 
-                "Chi tiết": parameter  
+                "price":price,
+                "monitor_technique":monitor_technique,
+                "monitor_size":monitor_size,
+                "monitor_resolution":monitor_resolution,
+                "back_camera":back_camera,
+                "back_video":back_video,
+                "front_camera":front_camera,
+                "front_video":front_video,
+                "gpu":gpu,
+                "cpu":cpu ,
+                "ram": ram,
+                "rom":rom ,
+                "battery":battery ,
+                "charging_port":charging_port ,
+                "os":os ,
+                "chipset":chipset  
             }
             
             data_list.append(data)
